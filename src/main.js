@@ -221,32 +221,51 @@ function stickUpdate() {
   let l = false, r = false, j = false
   for (const t of touches.values()) {
     if (t.kind === 'stick') { if (t.dx < -8) l = true; if (t.dx > 8) r = true }
-    else j = true
+    else if (t.kind === 'jump') j = true
   }
   keys.left = l; keys.right = r; keys.jump = j
   const st = [...touches.values()].find((t) => t.kind === 'stick')
+  if (!touchMode) return
   document.getElementById('knob').style.transform = `translateX(${st ? Math.max(-26, Math.min(26, st.dx)) : 0}px)`
   document.getElementById('jumpbtn').classList.toggle('on', j)
 }
-addEventListener('pointerdown', (e) => {
-  if (e.pointerType !== 'touch') return
-  if (e.target.closest?.('button')) return
-  e.preventDefault(); unlockAudio()
-  const kind = e.clientX < innerWidth / 2 ? 'stick' : 'jump'
-  touches.set(e.pointerId, { kind, ox: e.clientX, dx: 0 })
-  if (kind === 'jump') pressed.add('jump')
-  else pressed.add('ok')
+// 指は touch の出来事で見る。触るたびに、いま触れている指の一覧（e.touches）から作り直すので、
+// 離した合図を取りこぼしても（iPhone のアプリの中のブラウザなどで起きる）、次に触った時点で直る。
+// 前は pointerup だけを頼りにしていて、取りこぼすと右を押したままになった（2026-11-03、iPhone の X アプリで）
+function syncTouches(e) {
+  const alive = new Set()
+  for (const t of e.touches) {
+    alive.add(t.identifier)
+    if (touches.has(t.identifier)) continue
+    // 新しく触った指
+    const onButton = t.target?.closest?.('button')
+    const kind = onButton ? 'button' : t.clientX < innerWidth / 2 ? 'stick' : 'jump'
+    touches.set(t.identifier, { kind, ox: t.clientX, dx: 0 })
+    if (kind === 'jump') pressed.add('jump')
+    else if (kind === 'stick') pressed.add('ok')
+  }
+  for (const id of [...touches.keys()]) if (!alive.has(id)) touches.delete(id)
+  for (const t of e.touches) {
+    const s = touches.get(t.identifier)
+    if (s?.kind !== 'stick') continue
+    s.dx = t.clientX - s.ox
+    // 指を戻したらすぐ逆へ向けるように、触った所をついてこさせる
+    if (Math.abs(s.dx) > 36) { s.ox = t.clientX - Math.sign(s.dx) * 36; s.dx = Math.sign(s.dx) * 36 }
+  }
   stickUpdate()
-}, { passive: false })
-addEventListener('pointermove', (e) => {
-  const t = touches.get(e.pointerId)
-  if (!t || t.kind !== 'stick') return
-  t.dx = e.clientX - t.ox
-  // 指を戻したらすぐ逆へ向けるように、触った所をついてこさせる
-  if (Math.abs(t.dx) > 36) { t.ox = e.clientX - Math.sign(t.dx) * 36; t.dx = Math.sign(t.dx) * 36 }
-  stickUpdate()
-})
-for (const ev of ['pointerup', 'pointercancel']) addEventListener(ev, (e) => { if (touches.delete(e.pointerId)) stickUpdate() })
+}
+function clearTouches() { touches.clear(); if (touchMode) stickUpdate() }
+for (const ev of ['touchstart', 'touchmove', 'touchend', 'touchcancel']) {
+  addEventListener(ev, (e) => {
+    if (ev === 'touchstart') unlockAudio()
+    const onButton = [...e.changedTouches].some((t) => t.target?.closest?.('button'))
+    if (!onButton) e.preventDefault()   // ボタンの click は止めない
+    syncTouches(e)
+  }, { passive: false })
+}
+// アプリから離れた・画面が隠れたら、指は全部離したことにする
+addEventListener('blur', clearTouches)
+document.addEventListener('visibilitychange', () => { if (document.hidden) clearTouches() })
 document.getElementById('retry')?.addEventListener('click', () => { unlockAudio(); pressed.add('retry') })
 document.getElementById('back')?.addEventListener('click', () => { unlockAudio(); pressed.add('back') })
 let padPrev = {}
