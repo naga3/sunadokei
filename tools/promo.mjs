@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 紹介動画を作る: Vite を立ててから（npm run dev、:5194）
+// 紹介動画を作る: Vite を立ててから（npm run dev、:15050）
 //   node tools/promo.mjs                 → videos/sunadokei-promo.mp4（1080×1080、30fps、H.264/AAC。約 40 秒）
 //   URL=http://127.0.0.1:5195/ node tools/promo.mjs   ほかのポートのサーバーで
 // 画面なしのブラウザでゲームを自動で遊ばせ（tools/bot.mjs と同じ自動操作）、1 コマずつ撮る。
@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { tmpdir } from 'node:os'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const URL = process.env.URL || 'http://127.0.0.1:5194/'
+const URL = process.env.URL || 'http://127.0.0.1:15050/'
 const FPS = 30
 const OUT = join(ROOT, 'videos', 'sunadokei-promo.mp4')
 const TMP = join(tmpdir(), 'zz-sunadokei-promo')

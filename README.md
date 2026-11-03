@@ -26,7 +26,7 @@
 
 ```
 npm install
-npm run dev        # http://127.0.0.1:5194/
+npm run dev        # http://127.0.0.1:15050/
 ```
 
 公開: https://naga3.github.io/sunadokei/（main に push すると `.github/workflows/pages.yml` がビルドして GitHub Pages に出す）

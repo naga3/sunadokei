@@ -1,4 +1,4 @@
-// 確かめ: Vite（npm run dev、:5194）を立ててから
+// 確かめ: Vite（npm run dev、:15050）を立ててから
 //   node tools/bot.mjs [固定する年齢]   右を押し続けて壁・穴・敵の前で跳ぶ自動操作で、5 ステージを走らせる（年齢を決めると、その体のまま。当たっても年をとらない）
 //   node tools/bot.mjs shots            各場面の画面を zz-*.png に撮る
 //   LIFE=50 node tools/bot.mjs          寿命（秒）を変えて測る
@@ -11,7 +11,7 @@ const errs = []
 page.on('pageerror', (e) => errs.push(String(e)))
 page.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()) })
 const mode = process.argv[2] || 'bot'
-await page.goto((process.env.URL || 'http://127.0.0.1:5194/') + '?test' + (process.env.LIFE ? '&life=' + process.env.LIFE : ''))
+await page.goto((process.env.URL || 'http://127.0.0.1:15050/') + '?test' + (process.env.LIFE ? '&life=' + process.env.LIFE : ''))
 await page.waitForFunction(() => window.__G)
 if (mode === 'shots') {
   const shot = async (name) => { await page.evaluate(() => __G.render()); await page.locator('canvas').screenshot({ path: `zz-${name}.png` }) }

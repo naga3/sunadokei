@@ -11,5 +11,5 @@ const font = () => ({
   },
 })
 
-// ポートは ~/src/etc/PORTS.md の一覧から 5194
-export default defineConfig({ base: './', plugins: [font()], server: { port: 5194, strictPort: true }, preview: { port: 5194, strictPort: true }, clearScreen: false })
+// ポートは ~/src/etc/PORTS.md の区画から 15050
+export default defineConfig({ base: './', plugins: [font()], server: { port: 15050, strictPort: true }, preview: { port: 15050, strictPort: true }, clearScreen: false })
