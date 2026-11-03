@@ -854,10 +854,11 @@ function drawEnding() {
   if (f > ENDING.done) text(`おしまい　　${KEY()}で タイトルへ`, W / 2, 86, P.gy6, { align: 'center' })
 }
 
-// 題字。Pixel で描いた ui/title（logo）があればそれを、無ければ文字から作る
+// 題字。PIXEL_LOGO が true なら Pixel で描いた ui/title（logo）を、false なら文字から作る（いまは Pixel の絵。2026-11-03 に一度文字から作る方へ戻したが、描き直した絵で Pixel に戻した）
+const PIXEL_LOGO = true
 let logoCanvas = null
 function drawLogo(cx, y) {
-  const drawn = pic('ui/title', 'logo')
+  const drawn = PIXEL_LOGO && pic('ui/title', 'logo')
   if (drawn) { ctx.drawImage(drawn, Math.round(cx - drawn.width / 2), y); return }
   if (!logoCanvas) logoCanvas = makeLogo('命の砂時計', 3)
   ctx.drawImage(logoCanvas, Math.round(cx - logoCanvas.width / 2), y)
@@ -932,4 +933,4 @@ if (params.has('ending')) { G.runAges = STAGES.map(() => 40); setScene('ending')
 if (!params.has('test')) requestAnimationFrame(frame)
 
 // 確かめ用（headless のテストから使う）
-window.__G = { G, keys, pressed, update, render, startStage, TUNE, vigor, STAGES }
+window.__G = { G, keys, pressed, update, render, startStage, TUNE, vigor, STAGES, best }

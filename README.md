@@ -31,12 +31,11 @@ npm run dev        # http://127.0.0.1:5194/
 
 公開: https://naga3.github.io/sunadokei/（main に push すると `.github/workflows/pages.yml` がビルドして GitHub Pages に出す）
 
-```
-```
 
 - 操作: ←→ 歩く、Z・X・Space 跳ぶ（長押しで高く）、R 赤ちゃんからやり直す、Esc タイトル。ゲームパッドも可
 - スマホ（gunzo と同じ考え）: 画面の外の余白（縦持ちは下、横持ちは左右の帯。狭ければ画面に薄く重ねる）にスティックとジャンプのボタンを出す。触る所はどこでもよく、左半分がスティック（触った所から左右へずらす）、右半分がジャンプ（長押しで高く）。↺ でやり直し、✕ でタイトル。`src/main.js` の `layoutPad`
 - 確かめ用の URL: `?stage=1〜5`（そのステージから）、`?age=40`（その年齢から）、`?freeze`（年をとらない）、`?life=50`（一生の秒数）、`?ending`（エンディングだけ）
+- 紹介動画: Vite を立ててから `node tools/promo.mjs` で `videos/sunadokei-promo.mp4`（1080×1080、約 48 秒。自動操作で遊ばせて撮り、字幕と曲を重ねる。効果音は入らない）
 - 自動の確かめ: Vite を立ててから `node tools/bot.mjs 79.9`（80 歳の体のまま 5 ステージを走らせて、通れるか）、`node tools/bot.mjs`（年をとりながら、何歳でクリアするか）、`node tools/bot.mjs shots`（各場面を撮る）。自動操作は近道を使わず、敵にもよく当たるので、人が遊ぶより遅い
 
 ## 絵・曲・文字
