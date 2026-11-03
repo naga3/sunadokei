@@ -30,6 +30,10 @@ function builder() {
     // 飛び石: 1 マスの穴が 2 つ。青年なら一跳び
     stones() { return b.flat(1).pit().flat(1).pit().flat(2) },
     enemy(n) { return b.flat(n, (i) => (i === Math.floor(n / 2) ? { [h]: 'e' } : null)) },
+    // k 体を n 列に等しく並べる
+    enemies(n, k) { const at = new Set(Array.from({ length: k }, (_, j) => Math.floor(((j + 0.5) * n) / k))); return b.flat(n, (i) => (at.has(i) ? { [h]: 'e' } : null)) },
+    // 1 マスの穴が続く（間は gap 列の地面）。青年なら走ったまま越えていける
+    pits(k, gap = 2) { for (let i = 0; i < k; i++) { b.pit(); b.flat(gap) } return b },
     conv(n, dir) { return b.flat(n, () => ({ [h - 1]: dir > 0 ? '>' : '<' })) },
     // 1 段ずつの階段
     stairs(k, dir = 1, w = 2) { for (let i = 0; i < k; i++) { h += dir; b.flat(w) } return b },
@@ -85,65 +89,71 @@ function builder() {
 function stage1() {
   return builder().start()
     .flat(6).up().flat(4).up().flat(5).down().flat(3).pit().flat(5).down().flat(4)
-    .enemy(8).pit().flat(5).up().flat(3)
-    .wall(3).flat(6).down().flat(2).down().flat(2).down().flat(4)
-    .enemy(10).stones().flat(4)
-    .valley(2, (b) => b.flat(6))
-    .flat(4).up().flat(3).pit().flat(3).down().flat(6)
-    .enemy(8).flat(3).goal().done('野原')
+    .enemy(8).pit().flat(4).up().flat(3).enemy(6).down().flat(2)
+    .pits(3, 3).enemies(12, 2).up().flat(3)
+    .wall(3).flat(4).enemy(6).down().flat(2).down().flat(2).down().flat(2)
+    .enemies(12, 2).stones().flat(3).up().flat(2).pit().flat(3).down().flat(3)
+    .valley(2, (b) => b.flat(1).enemy(6).flat(1))
+    .flat(3).pits(2, 3).up().flat(3).enemy(6).pit().flat(3).down().flat(4)
+    .enemies(12, 2).stones().flat(3).goal().done('野原')
 }
 
 // 2. 丘: 高い足場の近道と、谷の崩れる橋
 function stage2() {
   return builder().start()
     .flat(6).up().flat(3).up().flat(4).pit().flat(4).down().flat(2)
-    .deck(18, (b) => b.flat(2).enemy(6).up().flat(3).down().enemy(7))
-    .flat(3).valley(2, (b) => b.flat(2).enemy(6).flat(2))
-    .flat(3).wall(4).flat(4).pit().flat(3)
-    .stairs(2, -1).flat(2).stones().flat(3)
-    .deck(20, (b) => b.flat(1).pit().flat(3).enemy(6).pit().flat(3).enemy(6))
-    .flat(2).up().flat(2).up().flat(3).down().flat(2).down().flat(3)
-    .enemy(8).goal().done('丘')
+    .deck(22, (b) => b.flat(2).enemies(8, 2).up().flat(3).down().enemies(9, 2))
+    .flat(2).pits(2, 2).valley(2, (b) => b.flat(2).enemies(8, 2).flat(1))
+    .flat(3).wall(4).flat(3).enemy(6).pit().flat(3)
+    .stairs(2, -1).flat(2).stones().flat(2).enemies(10, 2)
+    .deck(24, (b) => b.flat(1).pit().flat(3).enemy(6).pit().flat(3).enemies(9, 2).pit().flat(1))
+    .flat(2).up().flat(2).up().flat(3).pit().flat(2).down().flat(2).down().flat(3)
+    .valley(2, (b) => b.flat(1).enemy(6).flat(1))
+    .flat(2).pits(3, 2).up().flat(2).stones().down().flat(2).enemy(6).pits(2, 2)
+    .enemies(10, 2).goal().done('丘')
 }
 
 // 3. 工場の町: コンベアと時限の扉
 function stage3() {
   return builder().start()
-    .flat(5).conv(5, 1).flat(3).up().flat(3).conv(6, -1).flat(2).down().flat(4)
-    .door(10).flat(3)
-    .deck(22, (b) => b.flat(2).conv(6, -1).enemy(6).conv(6, -1).flat(2))
-    .flat(3).wall(3).flat(3).pit().flat(3).down().flat(2).down().flat(3)
-    .valley(3, (b) => b.flat(1).conv(5, -1).enemy(5).flat(1))
-    .flat(3).door(14).enemy(8).up().flat(3).stones().flat(3)
-    .conv(8, 1).flat(2).up().flat(2).down().flat(2)
-    .enemy(8).goal().done('町')
+    .flat(5).conv(5, 1).flat(2).enemy(5).up().flat(3).conv(5, -1).flat(2).down().flat(3)
+    .pits(2, 2).door(10).flat(2)
+    .deck(24, (b) => b.flat(2).conv(4, -1).enemies(8, 2).conv(4, -1).flat(2))
+    .flat(3).wall(3).flat(3).pit().flat(3).enemy(5).down().flat(2).down().flat(3)
+    .valley(3, (b) => b.flat(1).conv(4, -1).enemies(8, 2).flat(1))
+    .flat(3).door(12).enemies(10, 2).up().flat(3).stones().flat(2)
+    .conv(6, 1).pit().conv(5, 1).flat(2).up().flat(2).enemy(5).down().flat(2)
+    .pits(3, 2).enemies(10, 2)
+    .goal().done('町')
 }
 
 // 4. 山: 上って下りる。ばねの壁と、長い近道
 function stage4() {
   return builder().start()
-    .flat(4).stairs(2, 1, 3).enemy(6).pit().flat(3)
+    .flat(4).stairs(2, 1, 3).enemies(9, 2).pit().flat(3)
     .wall(3).flat(3).pit().flat(2).down().flat(3).down().flat(2).down().flat(2)
-    .deck(26, (b) => b.flat(2).enemy(5).conv(5, -1).flat(1).enemy(6).conv(5, -1).flat(2))
-    .flat(3).stones().up().flat(3).pit().flat(3)
-    .valley(3, (b) => b.flat(1).enemy(5).conv(4, -1).enemy(5))
+    .deck(28, (b) => b.flat(2).enemies(7, 2).conv(5, -1).flat(1).enemies(8, 2).conv(5, -1).flat(2))
+    .flat(3).stones().up().flat(3).pit().flat(3).enemy(6)
+    .valley(3, (b) => b.flat(1).enemy(5).conv(4, -1).enemies(7, 2))
     .flat(2).down().flat(2).wall(3).flat(3).door(12).flat(2)
-    .stairs(3, -1, 2).enemy(8).pit().flat(3).up().flat(3).stones()
-    .enemy(8).goal().done('山')
+    .stairs(3, -1, 2).enemies(10, 2).pits(3, 2).up().flat(3)
+    .enemy(6).pit().flat(2).down().flat(2)
+    .valley(2, (b) => b.flat(1).enemies(8, 2).flat(1))
+    .flat(2).pits(2, 2).enemies(10, 2).goal().done('山')
 }
 
 // 5. 夕暮れの道: ぜんぶ
 function stage5() {
   return builder().start()
-    .flat(4).enemy(6).up().flat(3).pit().flat(3).conv(6, -1).down().flat(3)
-    .deck(24, (b) => b.flat(1).enemy(5).pit().flat(2).enemy(5).conv(6, -1).flat(2).enemy(4))
-    .flat(2).up().flat(2).valley(3, (b) => b.flat(1).conv(5, -1).enemy(5).conv(4, -1).flat(1))
-    .flat(2).down().flat(2).wall(3).flat(3).pit().flat(3).stones().flat(2)
+    .flat(4).enemies(8, 2).up().flat(3).pit().flat(3).conv(6, -1).down().flat(3)
+    .deck(26, (b) => b.flat(1).enemy(5).pit().flat(2).enemies(8, 2).conv(6, -1).flat(2).enemy(4))
+    .flat(2).up().flat(2).valley(3, (b) => b.flat(1).conv(5, -1).enemies(8, 2).conv(4, -1).flat(1))
+    .flat(2).down().flat(2).wall(3).flat(3).pit().flat(3).stones().flat(2).enemy(5)
     .door(12).flat(2).down().flat(2).down().flat(3)
-    .deck(26, (b) => b.flat(1).enemy(5).conv(5, -1).pit().flat(2).enemy(5).conv(5, -1).flat(3))
-    .flat(2).wall(3).flat(2).pit().flat(2).down().flat(2).pit().flat(2).down().flat(2)
-    .valley(2, (b) => b.flat(1).enemy(6).flat(1))
-    .enemy(8).pit().flat(3).goal().done('夕暮れの道')
+    .deck(28, (b) => b.flat(1).enemies(8, 2).conv(5, -1).flat(1).pit().flat(2).enemies(8, 2).conv(5, -1).flat(3))
+    .flat(2).down().flat(2).pit().flat(2).down().flat(2)
+    .valley(2, (b) => b.flat(1).enemies(8, 2).flat(1))
+    .pits(3, 2).enemies(10, 2).pit().flat(3).goal().done('夕暮れの道')
 }
 
 export const STAGES = [stage1(), stage2(), stage3(), stage4(), stage5()]

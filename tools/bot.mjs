@@ -2,6 +2,7 @@
 //   node tools/bot.mjs [固定する年齢]   右を押し続けて壁・穴・敵の前で跳ぶ自動操作で、5 ステージを走らせる（年齢を決めると、その体のまま。当たっても年をとらない）
 //   node tools/bot.mjs shots            各場面の画面を zz-*.png に撮る
 //   LIFE=50 node tools/bot.mjs          寿命（秒）を変えて測る
+//   NOHIT=1 node tools/bot.mjs          敵に当たらない（上級者の代わり。本道だけで、近道は使わない）
 // 画面なしのブラウザは ~/src/etc/CLAUDE.md の「確かめるとき」のもの
 import { chromium } from '../../enso/node_modules/playwright/index.mjs'
 const browser = await chromium.launch({ executablePath: process.env.HOME + '/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell' })
@@ -29,7 +30,7 @@ if (mode === 'shots') {
 } else {
   // bot: 右を押し続け、壁・穴・敵の前で跳ぶ。age を決めると年齢を止める
   const fixed = process.argv[2] != null ? +process.argv[2] : null
-  const res = await page.evaluate((fixed) => {
+  const res = await page.evaluate(([fixed, nohit]) => {
     const { G, keys, pressed, update, startStage, STAGES, TUNE } = __G
     if (fixed != null) { TUNE.hitYears = 0; TUNE.fallYears = 0 }
     const out = []
@@ -50,6 +51,7 @@ if (mode === 'shots') {
         keys.right = true
         if (needJump && f - lastJ > 8) { pressed.add('jump'); holdJ = 30; lastJ = f }
         keys.jump = holdJ > 0; if (holdJ > 0) holdJ--
+        if (nohit) G.p.inv = 2
         update()
         if (fixed != null) G.age = fixed
         if (p.x > bestX + 1) { bestX = p.x; still = 0 } else if (++still > 900) break
@@ -57,7 +59,7 @@ if (mode === 'shots') {
       out.push({ stage: STAGES[st].name, cols: G.map[0].length, scene: G.scene, age: G.age.toFixed(1), x: Math.round(G.p.x / 16), sec: (f / 60).toFixed(1) })
     }
     return out
-  }, fixed)
+  }, [fixed, !!process.env.NOHIT])
   console.table(res)
 }
 console.log(errs.length ? errs.join('\n') : 'エラーなし')

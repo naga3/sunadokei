@@ -854,6 +854,44 @@ function drawEnding() {
   if (f > ENDING.done) text(`おしまい　　${KEY()}で タイトルへ`, W / 2, 86, P.gy6, { align: 'center' })
 }
 
+// 題字。Pixel で描いた ui/title（logo）があればそれを、無ければ文字から作る
+let logoCanvas = null
+function drawLogo(cx, y) {
+  const drawn = pic('ui/title', 'logo')
+  if (drawn) { ctx.drawImage(drawn, Math.round(cx - drawn.width / 2), y); return }
+  if (!logoCanvas) logoCanvas = makeLogo('命の砂時計', 3)
+  ctx.drawImage(logoCanvas, Math.round(cx - logoCanvas.width / 2), y)
+}
+// 文字の形を 3 倍にして、太い縁取り・落ちる影・上から下への色の段（砂の色）・上の縁の光を付ける
+function makeLogo(s, k) {
+  const w = textWidth(s), h = 12
+  const mask = []
+  let x0 = 0
+  for (const ch of s) {
+    const g = GLYPHS[ch] || GLYPHS['?']
+    for (let r = 0; r < 12; r++) {
+      const bits = parseInt(g.slice(1 + r * 2, 3 + r * 2), 16)
+      for (let b = 0; b < 8; b++) if (bits & (0x80 >> b)) mask.push([x0 + b, r])
+    }
+    x0 += parseInt(g[0], 16)
+  }
+  const on = new Set(mask.map(([x, y]) => y * 1000 + x))
+  const pad = 4
+  const c = document.createElement('canvas')
+  c.width = w * k + pad * 2; c.height = h * k + pad * 2
+  const g = c.getContext('2d')
+  const box = (x, y, ww, hh, col) => { g.fillStyle = hex(col); g.fillRect(x, y, ww, hh) }
+  // 影（右下へ 2 点）と縁取り（まわり 2 点）
+  for (const [x, y] of mask) box(pad + x * k, pad + y * k + 3, k + 2, k + 2, P.pu0)
+  for (const [x, y] of mask) box(pad + x * k - 2, pad + y * k - 2, k + 4, k + 4, P.ink)
+  // 中身: 上は明るい砂、下へ濃く
+  const band = (yy) => (yy < 3 ? P.ye3 : yy < 6 ? P.sa3 : yy < 9 ? P.ye1 : P.or2)
+  for (const [x, y] of mask) box(pad + x * k, pad + y * k, k, k, band(y))
+  // 上が空いている所に 1 点の光
+  for (const [x, y] of mask) if (!on.has((y - 1) * 1000 + x)) box(pad + x * k, pad + y * k, k, 1, P.white)
+  return c
+}
+
 function drawTitle() {
   const t = G.t
   const age = (t / 12) % TUNE.maxAge
@@ -864,7 +902,7 @@ function drawTitle() {
   }
   drawHourglass(W / 2, 192, 1 - age / TUNE.maxAge, true, t)
   draw('player/' + phaseName(age), (t >> 3) & 1 ? 'run1' : 'run2', 100, 176)
-  text('命の砂時計', W / 2, 28, P.white, { align: 'center', scale: 3 })
+  drawLogo(W / 2, 22)
   if ((t >> 5) & 1 || t < 30) text(touchMode ? 'タップで はじめる' : 'Z か スペースで はじめる', W / 2, 84, P.ye3, { align: 'center' })
   const rec = STAGES.map((s, i) => best[i]).filter((v) => v != null)
   if (rec.length) text('ベスト ' + STAGES.map((s, i) => best[i] ?? '―').join(' / '), W / 2, 100, P.gy6, { align: 'center' })
