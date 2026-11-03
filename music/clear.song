@@ -1,0 +1,25 @@
+# 命の砂時計のクリア（砂時計をひっくり返したときに 1 回だけ。きらきらして、ほっとする。約 4 秒）
+# ニ長調（道中と同じ）。G → A → D。2 本目の 12.5% が 16 分で和音を駆け上がり、最後は上から降ってくる
+title CLEAR
+tempo 120
+mode famicom
+instrument 0 lead @1 @v0 q7 ~10,8,20
+instrument 1 sparkle @0 @v5 q8
+part 0 @i0 v12
+part 1 @i1 v8
+part 2 q8
+part 3
+part 4
+
+bar 1
+  0: o5 b4 a8 b8 >c+4 <a8 >c+8
+  1: l16 o4 g b >d g <g b >d g <a >c+ e a <a >c+ e a
+  2: o2 g2 a2
+  3: @v2 o5 v5 f8 v3 f8 v5 f8 v3 f8 v5 f8 v3 f8 @v3 v6 c+16 v8 c+16 v10 c+8
+  4: r1
+bar 2
+  0: o6 @p8 d2. @p r4
+  1: l16 o6 d <a f+ d >d <a f+ d r2
+  2: o3 d2. r4
+  3: @v21 o5 v10 c1
+  4: c4 r2.

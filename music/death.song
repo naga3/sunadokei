@@ -1,0 +1,21 @@
+# 命の砂時計の寿命が尽きたとき（1 回だけ。悲しすぎず、静かに閉じる。約 5 秒）
+# ニ長調。Bm → G → Em → A → D。短調から入って、最後は長調の主和音で穏やかに閉じる。ドラム無し
+title DEATH
+tempo 96
+mode famicom
+instrument 0 flute @2 @v0 q7 ~8,10,24
+instrument 1 harp @2 @v5 q8
+part 0 @i0 v9
+part 1 @i1 v5
+part 2 q8
+part 3
+part 4
+
+bar 1
+  0: o5 f+4. e8 d4 <b4
+  1: o3 b8 >d8 f+8 b8 o3 g8 b8 >d8 g8
+  2: o2 b2 g2
+bar 2
+  0: o5 e4 c+4 @p8 d2 @p
+  1: o3 e8 g8 b8 >e8 o3 a8 >d8 f+4
+  2: o2 e4 a4 d2

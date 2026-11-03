@@ -1,0 +1,5 @@
+{
+  "palette": "sunadokei.gpl",
+  "after": "node tools/art.mjs",
+  "cwd": ".."
+}

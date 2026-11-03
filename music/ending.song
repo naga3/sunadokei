@@ -1,0 +1,34 @@
+# 命の砂時計のエンディング（1 回だけ。約 12 秒。しみじみと、最後は穏やかに）
+# ト長調（タイトルと同じ）。1〜2 小節目（6 秒）: 砂が落ちる間、タイトルの頭の形（B D F#）と時計のかすかな刻み。
+# 3 小節目: 光になって、上へ開く（C に長 7 度の B）。4 小節目: 主和音で、分散和音が上へ消えていく
+title ENDING
+tempo 80
+mode famicom
+instrument 0 flute @2 @v0 q7 ~8,10,24
+instrument 1 harp @2 @v5 q8
+part 0 @i0 v10
+part 1 @i1 v6
+part 2 q8
+part 3
+part 4
+
+bar 1
+  0: o4 b4 >d4 @p8 f+2 @p
+  1: o3 g8 >d8 g8 b8 o3 b8 >f+8 b8 >d8
+  2: o2 g2 b2
+  3: @v2 o5 v3 f4 v2 f4 v3 f4 v2 f4
+bar 2
+  0: o5 @p8 e2 @p d4 <a4
+  1: o4 c8 g8 >c8 e8 o4 d8 a8 >d8 f+8
+  2: o3 c2 o2 d2
+  3: @v2 o5 v3 f4 v2 f4 v3 f4 v2 f4
+bar 3
+  0: o5 e4 g4 @p8 b2 @p
+  1: o3 b8 >e8 g8 b8 o4 c8 g8 >c8 e8
+  2: o2 e2 >c2
+  3: r1
+bar 4
+  0: o5 @p8 g2. @p r4
+  1: o4 g8 b8 >d8 g8 b8 >d8 r4
+  2: o2 g2. r4
+  3: @v21 o5 v6 c1

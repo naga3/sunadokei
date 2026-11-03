@@ -1,0 +1,13 @@
+{
+  "name": "sunadokei",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "art": "node tools/art.mjs",
+    "font": "node tools/font.mjs"
+  },
+  "devDependencies": { "vite": "^7.1.5" }
+}
