@@ -1,7 +1,7 @@
-# 命の砂時計の道中（5 ステージ共通。ゲームが年齢で再生の速さを 0.84〜1.1 倍に変える）
-# ニ長調。I 前奏（ベースのオクターブ跳ね + 裏打ちの刻み）→ A（2 回目はエコー）→ B（1 小節ずつ上がる）→ サビ（倚音、デチューン）→ 頭へ
+# 命の砂時計の道中（5 ステージ共通。寿命に追われるタイムアタックなので、いつも急かすくらいの勢いで。ゲームは速さを変えずに流す）
+# ニ長調。I 前奏（ベースのオクターブ跳ね + 裏打ちの刻み）→ A（2 回目はエコー）→ B（1 小節ずつ上がる）→ サビ（合いの手、3-3-2）→ 頭へ
 title SAND STEPS
-tempo 132
+tempo 168
 mode famicom
 instrument 0 lead @1 @v0 q7 ~10,8,20
 instrument 1 stab @2 @v7 q8
@@ -143,3 +143,20 @@ bar 22
   2: o2 d4. d4. <a8 >c+8
   3: @v2 o5 v8 f8 v4 f8 @v3 v11 c+8 @v2 v4 f8 @v3 v7 c+16 c+16 v9 c+8 v11 c+16 c+16 c+8
   4: c4. c4. d8 d8
+
+choice dir-3-4 bars 3-4 parts 1,2,3,4 "急かす方向（伴奏とドラム。メロディはそのまま）"
+  # A: 16 分のハイハットで疾走（ベースは同じ音を 8 分で刻む）
+  A 1: @i1 V15 v7 o4 r8 f+8 r8 a8 r8 f+8 r8 a8 | o4 r8 f+8 r8 b8 r8 f+8 r8 b8
+  A 2: o2 d8 d8 d8 d8 d8 d8 d8 d8 | o2 b8 b8 b8 b8 b8 b8 b8 b8
+  A 3: l16 @v2 o5 v7 f v3 f v5 f v3 f @v3 v10 c+ @v2 v3 f v5 f v3 f v7 f v3 f v5 f v3 f @v3 v10 c+ @v2 v3 f v5 f v3 f | l16 @v2 o5 v7 f v3 f v5 f v3 f @v3 v10 c+ @v2 v3 f v5 f v3 f v7 f v3 f @v3 v4 c+ c+ v10 c+ @v2 v3 f v5 f v3 f
+  A 4: c8 r8 d8 c8 r8 c8 d4 | c8 r8 d8 c8 r8 c8 d4
+  # B: 秒針で急かす（2 本目が高い音を 16 分で刻み続ける）
+  B 1: @i1 V15 l16 o5 v8 a v4 a v6 a v4 a v8 a v4 a v6 a v4 a v8 a v4 a v6 a v4 a v8 a v4 a v6 a v4 a | o5 v8 f+ v4 f+ v6 f+ v4 f+ v8 f+ v4 f+ v6 f+ v4 f+ v8 f+ v4 f+ v6 f+ v4 f+ v8 f+ v4 f+ v6 f+ v4 f+
+  B 2: o2 d8 >d8 <d8 >d8 <d8 >d8 <d8 >d8 | o2 b8 >b8 <b8 >b8 <b8 >b8 <b8 >b8
+  B 3: @v2 o5 v6 f8 v3 f8 @v3 v10 c+8 @v2 v3 f8 v6 f8 v3 f8 @v3 v10 c+8 @v2 v3 f8 | @v2 o5 v6 f8 v3 f8 @v3 v10 c+8 @v2 v3 f8 v6 f8 @v3 v4 c+16 c+16 v10 c+8 @v2 v3 f8
+  B 4: c4 d4 c8 c8 d4 | c4 d4 r8 c8 d4
+  # C: 4 つ打ちで煽る（キックが毎拍、裏のハイハットを強く、ベースが 16 分で走る）
+  C 1: @i1 V15 v7 o4 r8 f+8 r8 a8 r8 f+8 r8 a8 | o4 r8 f+8 r8 b8 r8 f+8 r8 b8
+  C 2: o2 d16 d16 >d8 <d16 d16 >d8 <d16 d16 >d8 <d16 d16 >d8 | o2 b16 b16 >b8 <b16 b16 >b8 <b16 b16 >b8 <b16 b16 >b8
+  C 3: @v2 o5 v3 f8 v8 f8 @v3 v11 c+8 @v2 v8 f8 v3 f8 v8 f8 @v3 v11 c+8 @v2 v8 f8 | @v2 o5 v3 f8 v8 f8 @v3 v11 c+8 @v2 v8 f8 v3 f8 v8 f8 @v3 v11 c+8 @v2 v8 f8
+  C 4: c4 c4 c4 c4 | c4 c4 c4 c4
